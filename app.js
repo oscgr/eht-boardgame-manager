@@ -22,7 +22,7 @@ app.get('/api/boardgames', async (req, res) => {
 })
 
 app.post('/api/boardgames', async (req, res) => {
-  const {name, owner, bggUrl: bgg_url, lentTo: lent_to} = req.body || {}
+  const {name, owner, bgg_url, lent_to} = req.body || {}
 
   // mandatory props
   if (name && owner) {

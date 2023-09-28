@@ -7,8 +7,8 @@ POST http://localhost:3000/api/boardgames
 Content-Type: application/json
 
 {
-  "owner": "Oscar",
-  "bggUrl": "http://testurl",
-  "lentTo": "Axelle",
-  "name": "Le jeu 1"
+  "owner": "Jeb",
+  "bgg_url": "http://testurl",
+  "lent_to": "Dude",
+  "name": "Foo bar"
 }
