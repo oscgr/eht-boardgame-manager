@@ -22,6 +22,7 @@ const knex = require('knex')({
 });
 
 app.use(bodyParser.json())
+app.use(express.static(path.join(__dirname, 'www')));
 
 app.get('/api/boardgames', async (req, res) => {
   const selectedRows = await knex('boardgames')
@@ -53,8 +54,9 @@ app.post('/api/boardgames', async (req, res) => {
 
 
 // WEB SERVER
-app.get('/', function(req, res) {
+app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, '/www/index.html'));
+
 });
 
 

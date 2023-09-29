@@ -207,3 +207,4 @@ eht-boardgame-manager.iml
 .idea
 /boardgames.db
 databases/data.db
+/www/

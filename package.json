@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "scripts": {
     "start": "bun app.ts",
-    "docker:build": "docker build -t eht-boardgame-manager ."
+    "docker:build": "docker build -t eht-boardgame-manager .",
+    "docker:run": "docker-compose up -d"
   },
   "main": "app.ts",
   "dependencies": {
