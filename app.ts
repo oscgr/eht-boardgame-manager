@@ -1,12 +1,22 @@
-const express = require('express')
+import express = require('express');
 const app = express()
-const bodyParser = require('body-parser')
-const port = 3000
+import bodyParser = require('body-parser');
+import path from "path";
+const port = process.env.PORT || 8080
+
+type Boardgame = {
+  id: number,
+  name: string,
+  owner: string,
+  lent_to?: string
+  bgg_url?: string
+}
+
 
 const knex = require('knex')({
   client: 'sqlite3',
   connection: {
-    filename: './data.db',
+    filename: './databases/data.db',
   },
   useNullAsDefault: true,
 });
@@ -40,6 +50,13 @@ app.post('/api/boardgames', async (req, res) => {
     res.json({error: 'body misses one of the mandatory properties: "name" or "owner"'})
   }
 })
+
+
+// WEB SERVER
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, '/www/index.html'));
+});
+
 
 app.listen(port, async () => {
   try {
