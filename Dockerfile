@@ -13,5 +13,5 @@ COPY www/ ./www/
 COPY app.ts .
 
 EXPOSE 8080
-VOLUME ["/databases"]
+VOLUME ["/usr/src/app/databases"]
 CMD ["bun",  "start"]
