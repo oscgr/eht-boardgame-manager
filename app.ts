@@ -4,15 +4,6 @@ import bodyParser = require('body-parser');
 import path from "path";
 const port = process.env.PORT || 8080
 
-type Boardgame = {
-  id: number,
-  name: string,
-  owner: string,
-  lent_to?: string
-  bgg_url?: string
-}
-
-
 const knex = require('knex')({
   client: 'sqlite3',
   connection: {
@@ -52,11 +43,38 @@ app.post('/api/boardgames', async (req, res) => {
   }
 })
 
+app.patch('/api/boardgames/:id', async (req, res) => {
+  const id = req.params.id
+  const line = await knex('boardgames').where('id', id).first()
+
+  if (!line) {
+    res.status(404)
+    res.json({error: 'Boardgame with id ' + id + ' not found'})
+  } else {
+    await knex('boardgames').where('id', id).update(req.body)
+    console.log('[API] Updating 1 line')
+    res.send({id})
+  }
+
+})
+
 
 // WEB SERVER
-app.get('*', function(req, res) {
+app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '/www/index.html'));
+});
 
+app.get('*', function(req, res) {
+  res.status(404)
+  res.json({error: 'Not found'});
+});
+app.post('*', function(req, res) {
+  res.status(404)
+  res.json({error: 'Not found'});
+});
+app.patch('*', function(req, res) {
+  res.status(404)
+  res.json({error: 'Not found'});
 });
 
 

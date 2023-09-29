@@ -1,5 +1,5 @@
-import { useAxios } from '@vueuse/integrations/useAxios'
 import axios from 'axios'
+import { ref } from 'vue'
 
 export interface Boardgame {
   id: number
@@ -9,19 +9,27 @@ export interface Boardgame {
   bgg_url: string
 }
 
-const useBoardgames = () => {
-  const { data, isLoading, execute, isFinished } = useAxios<Boardgame[]>('/api/boardgames')
+const boardgames = ref<Boardgame[]>([])
 
+const useBoardgames = () => {
+  const reload = async () => {
+    const { data } = await axios.get<Boardgame[]>('/api/boardgames')
+    boardgames.value = data
+  }
   const create = async (toSave: Boardgame) => {
     await axios.post('/api/boardgames', toSave)
-    await execute()
+    await reload()
   }
+  const patch = async (toSave: Partial<Omit<Boardgame>>) => {
+    await axios.patch('/api/boardgames/' + toSave.id, toSave)
+    await reload()
+  }
+
   return {
-    data,
-    isLoading,
     create,
-    reload: execute,
-    isFinished
+    reload,
+    boardgames,
+    patch
   }
 }
 
