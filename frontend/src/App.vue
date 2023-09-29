@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import useBoardgames from '@/stores/boardgames'
 import CreateDialog from '@/components/CreateDialog.vue'
+import md5 from 'crypto-js/md5'
 import { useLocalStorage } from '@vueuse/core'
 import { computed } from 'vue'
 import { sortBy } from 'lodash-es'
@@ -11,6 +12,10 @@ const sort = useLocalStorage('sort', 'name')
 const filteredAndSortedData = computed(() => {
   return sortBy(data.value, sort.value)
 })
+
+const getGravatarImageUrl = (user: string) => {
+  return 'https://www.gravatar.com/avatar/' + md5(user + '@ehtrace.com') + '?d=retro'
+}
 </script>
 
 <template>
@@ -59,8 +64,25 @@ const filteredAndSortedData = computed(() => {
           </tr>
           <tr v-for="boardgame in filteredAndSortedData" :key="boardgame.id">
             <td v-text="boardgame.name"></td>
-            <td v-text="boardgame.owner"></td>
-            <td v-text="boardgame.lent_to"></td>
+            <td>
+              <img
+                class="nes-avatar is-rounded is-medium"
+                alt="Gravatar image example"
+                :src="getGravatarImageUrl(boardgame.owner)"
+                style="image-rendering: pixelated"
+              />
+              <span style="margin-left: 1rem" v-text="boardgame.owner"></span>
+            </td>
+            <td>
+              <img
+                v-show="boardgame.lent_to"
+                class="nes-avatar is-rounded is-medium"
+                alt="Gravatar image example"
+                :src="getGravatarImageUrl(boardgame.lent_to)"
+                style="image-rendering: pixelated"
+              />
+              <span style="margin-left: 1rem" v-text="boardgame.lent_to"></span>
+            </td>
             <td>
               <a
                 class="nes-btn"
