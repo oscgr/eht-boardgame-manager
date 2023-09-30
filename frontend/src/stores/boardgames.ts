@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { ref } from 'vue'
+import useRest from '@/utils/rest'
 
 export interface Boardgame {
   id: number
@@ -12,16 +12,17 @@ export interface Boardgame {
 const boardgames = ref<Boardgame[]>([])
 
 const useBoardgames = () => {
+  const { query, create: createREST, patch: patchREST } = useRest<Boardgame>('/api/boardgames')
   const reload = async () => {
-    const { data } = await axios.get<Boardgame[]>('/api/boardgames')
-    boardgames.value = data
+    boardgames.value = await query()
   }
+
   const create = async (toSave: Boardgame) => {
-    await axios.post('/api/boardgames', toSave)
+    await createREST({ data: toSave })
     await reload()
   }
-  const patch = async (toSave: Partial<Omit<Boardgame>>) => {
-    await axios.patch('/api/boardgames/' + toSave.id, toSave)
+  const patch = async (toSave: Partial<Boardgame>) => {
+    await patchREST(toSave.id, { data: toSave })
     await reload()
   }
 

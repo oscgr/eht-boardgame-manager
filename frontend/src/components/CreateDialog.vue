@@ -2,13 +2,12 @@
   <button
     type="button"
     class="nes-btn is-primary"
-    style="position: fixed; bottom: 10px; left: 10px"
     onclick="document.getElementById('dialog-creation').showModal()"
   >
-    +
+    Ajouter un jeu +
   </button>
   <dialog class="nes-dialog" id="dialog-creation" ref="dialog-creation">
-    <form method="dialog" novalidate @submit.prevent="save">
+    <form method="dialog" novalidate @submit="save">
       <p class="title">Ajout d'un jeu</p>
       <div class="nes-field" style="padding-bottom: 1rem">
         <label for="name_creation">Nom</label>
@@ -47,13 +46,13 @@ import type { Boardgame } from '@/stores/boardgames'
 import useBoardgames from '@/stores/boardgames'
 
 const dialogCreation = ref<HTMLDialogElement>()
-const boardgame = ref<Boardgame>({})
+const boardgame = ref<Partial<Boardgame>>({})
 
 const { create } = useBoardgames()
 
 const save = async () => {
-  if (!boardgame.value.bgg_url || !boardgame.value.name || boardgame.value.owner) return
-  await create(boardgame.value)
+  if (!boardgame.value.bgg_url || !boardgame.value.name || !boardgame.value.owner) return
+  await create(boardgame.value as Boardgame)
   dialogCreation.value?.close()
   boardgame.value = {}
 }
