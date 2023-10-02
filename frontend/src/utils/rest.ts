@@ -1,6 +1,7 @@
 import useLoader from '@/stores/loader'
 import axios from 'axios'
 import type { AxiosRequestConfig } from 'axios'
+import type { PartialNull } from '@/utils/typescript'
 
 const useRest = <T>(baseURL: string) => {
   const { setLoading } = useLoader()
@@ -32,7 +33,7 @@ const useRest = <T>(baseURL: string) => {
     async create(config: AxiosRequestConfig<T>) {
       return await call<T>('post', '', config)
     },
-    async patch(id: string, config: AxiosRequestConfig<Partial<T>>) {
+    async patch(id: string, config: AxiosRequestConfig<PartialNull<T>>) {
       return await call<Partial<T>>('patch', `/${id}`, config)
     },
     async del(id: string, config: AxiosRequestConfig) {

@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import useRest from '@/utils/rest'
+import type { PartialNull } from '@/utils/typescript'
 
 export interface Boardgame {
   id: number
@@ -12,7 +13,12 @@ export interface Boardgame {
 const boardgames = ref<Boardgame[]>([])
 
 const useBoardgames = () => {
-  const { query, create: createREST, patch: patchREST } = useRest<Boardgame>('/api/boardgames')
+  const {
+    query,
+    create: createREST,
+    patch: patchREST,
+    del: delREST
+  } = useRest<Boardgame>('/api/boardgames')
   const reload = async () => {
     boardgames.value = await query()
   }
@@ -21,8 +27,12 @@ const useBoardgames = () => {
     await createREST({ data: toSave })
     await reload()
   }
-  const patch = async (toSave: Partial<Boardgame>) => {
+  const patch = async (toSave: PartialNull<Boardgame>) => {
     await patchREST(toSave.id, { data: toSave })
+    await reload()
+  }
+  const del = async (id: number) => {
+    await delREST(id)
     await reload()
   }
 
@@ -30,7 +40,8 @@ const useBoardgames = () => {
     create,
     reload,
     boardgames,
-    patch
+    patch,
+    del
   }
 }
 

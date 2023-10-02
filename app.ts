@@ -55,9 +55,21 @@ app.patch('/api/boardgames/:id', async (req, res) => {
     console.log('[API] Updating 1 line')
     res.send({id})
   }
-
 })
 
+app.delete('/api/boardgames/:id', async (req, res) => {
+  const id = req.params.id
+  const line = await knex('boardgames').where('id', id).first()
+
+  if (!line) {
+    res.status(404)
+    res.json({error: 'Boardgame with id ' + id + ' not found'})
+  } else {
+    await knex('boardgames').where('id', id).del()
+    console.log('[API] Deleting 1 line')
+    res.send({id})
+  }
+})
 
 // WEB SERVER
 app.get('/', function(req, res) {
@@ -73,6 +85,10 @@ app.post('*', function(req, res) {
   res.json({error: 'Not found'});
 });
 app.patch('*', function(req, res) {
+  res.status(404)
+  res.json({error: 'Not found'});
+});
+app.delete('*', function(req, res) {
   res.status(404)
   res.json({error: 'Not found'});
 });

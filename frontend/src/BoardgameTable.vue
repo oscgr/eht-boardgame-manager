@@ -1,46 +1,22 @@
 <template>
   <Transition type="transition" appear name="fade">
     <div class="nes-table-responsive" style="padding: 0 5rem 0 5rem" v-show="displayTable">
-      <table class="nes-table is-bordered is-centered" style="min-width: 900px">
+      <table class="nes-table is-bordered is-centered" style="min-width: 900px; width: 100%">
         <thead>
           <tr>
-            <th>
-              <div class="nes-field">
-                <div class="flex">
-                  <label style="display: none" for="name"></label>
-                  <div class="nes-pointer" style="margin-bottom: 1rem" @click="sort = 'name'">
-                    Nom du jeu
-                  </div>
-                  <span v-show="sort === 'name'" style="padding-left: 1rem" v-text="'&Hat;'" />
-                </div>
-                <input autofocus type="text" id="name" class="nes-input" />
-              </div>
+            <th @click="sort = 'name'" class="nes-pointer">
+              Nom du jeu
+              <span v-show="sort === 'name'" style="padding-left: 1rem" v-text="'&Hat;'" />
             </th>
-            <th style="max-width: 300px">
-              <div class="nes-field">
-                <div class="flex">
-                  <label style="display: none" for="owner"></label>
-                  <div class="nes-pointer" style="margin-bottom: 1rem" @click="sort = 'owner'">
-                    Propriétaire
-                  </div>
-                  <span v-show="sort === 'owner'" style="padding-left: 1rem" v-text="'&Hat;'" />
-                </div>
-                <input autofocus type="text" id="owner" class="nes-input" />
-              </div>
+            <th @click="sort = 'owner'" class="nes-pointer">
+              Propriétaire
+              <span v-show="sort === 'owner'" style="padding-left: 1rem" v-text="'&Hat;'" />
             </th>
-            <th style="max-width: 300px">
-              <div class="nes-field">
-                <div class="flex">
-                  <label style="display: none" for="lent_to"></label>
-                  <div class="nes-pointer" style="margin-bottom: 1rem" @click="sort = 'lent_to'">
-                    Prêté à
-                  </div>
-                  <span v-show="sort === 'lent_to'" style="padding-left: 1rem" v-text="'&Hat;'" />
-                </div>
-                <input autofocus type="text" id="lent_to" class="nes-input" />
-              </div>
+            <th @click="sort = 'lent_to'" class="nes-pointer">
+              Prêté à
+              <span v-show="sort === 'lent_to'" style="padding-left: 1rem" v-text="'&Hat;'" />
             </th>
-            <th style="max-width: 50px"></th>
+            <th style="width: 200px"></th>
           </tr>
         </thead>
         <tbody>
@@ -59,6 +35,18 @@
                 :class="{ 'is-error': !!boardgame.lent_to }"
                 v-text="boardgame.name"
               />
+              <ConfirmAction @ok="() => del(boardgame.id)">
+                <template #default="{ open }">
+                  <button
+                    v-show="boardgame.owner === me"
+                    type="button"
+                    style="margin-left: 1rem"
+                    class="nes-btn is-error"
+                    v-text="'x'"
+                    @click="open"
+                  />
+                </template>
+              </ConfirmAction>
             </td>
             <td>
               <img
@@ -91,13 +79,7 @@
                 </template>
               </ConfirmAction>
 
-              <button
-                v-show="!boardgame.lent_to"
-                type="button"
-                class="nes-btn is-primary is-rounded"
-              >
-                +
-              </button>
+              <AddLendingDialog :boardgame="boardgame" />
             </td>
             <td>
               <a
@@ -116,23 +98,29 @@
   </Transition>
 </template>
 <script lang="ts" setup>
-import useBoardgames from '@/stores/boardgames'
+import useBoardgames, { Boardgame } from '@/stores/boardgames'
 import md5 from 'crypto-js/md5'
 import { useLocalStorage } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
 import { sortBy } from 'lodash-es'
 import ConfirmAction from '@/components/ConfirmAction.vue'
+import AddLendingDialog from '@/components/AddLendingDialog.vue'
 
 const displayTable = ref(false)
-const { boardgames, reload, patch } = useBoardgames()
+const { boardgames, reload, patch, del } = useBoardgames()
 const sort = useLocalStorage('sort', 'name')
+const me = useLocalStorage('me', null)
 
-const filteredAndSortedBoardgames = computed(() => {
+const filteredAndSortedBoardgames = computed<Boardgame[]>(() => {
   return sortBy(boardgames.value, sort.value)
 })
 
 const getGravatarImageUrl = (user: string) => {
-  return 'https://www.gravatar.com/avatar/' + md5(user + '@ehtrace.com') + '?d=retro'
+  return (
+    'https://www.gravatar.com/avatar/' +
+    md5(user + '@' + import.meta.env.VITE_WORK_DOMAIN) +
+    '?d=retro'
+  )
 }
 
 onMounted(() => {
