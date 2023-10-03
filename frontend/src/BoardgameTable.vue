@@ -1,7 +1,7 @@
 <template>
   <Transition type="transition" appear name="fade">
-    <div class="nes-table-responsive" style="padding: 0 5rem 0 5rem" v-show="displayTable">
-      <table class="nes-table is-bordered is-centered" style="min-width: 900px; width: 100%">
+    <div class="nes-table-responsive" v-show="displayTable">
+      <table class="nes-table is-bordered is-centered" style="min-width: 99%">
         <thead>
           <tr>
             <th @click="sort = 'name'" class="nes-pointer">
