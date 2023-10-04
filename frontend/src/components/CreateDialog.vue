@@ -20,7 +20,9 @@
         />
       </div>
       <div class="nes-field" style="padding-bottom: 1rem">
-        <label for="owner_creation">Lien BoardGameGeek</label>
+        <label for="owner_creation"
+          >Lien <a href="https://boardgamegeek.com/" target="_blank">BoardGameGeek</a></label
+        >
         <input v-model="boardgame.bgg_url" type="url" id="bgg_url_creation" class="nes-input" />
       </div>
       <menu class="dialog-menu">

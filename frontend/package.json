@@ -1,12 +1,10 @@
 {
   "name": "eht-boardgame-manager-front",
   "scripts": {
-    "dev": "vite",
-    "preview": "vite preview",
-    "build": "vite build --emptyOutDir",
-    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
-    "lint": "eslint src --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src"
+    "front:dev": "vite",
+    "front:build": "vite build --emptyOutDir",
+    "front:lint": "eslint src --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "front:format": "prettier --write src"
   },
   "dependencies": {
     "@vueuse/core": "^10.4.1",

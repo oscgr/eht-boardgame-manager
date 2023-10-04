@@ -20,21 +20,31 @@
           </tr>
         </thead>
         <tbody>
-          <!--          <tr v-if="!isLoading && isFinished && !data?.length">-->
-          <!--            <td colspan="4" style="height: 90px; text-align: center">Aucun jeu enregistré</td>-->
-          <!--          </tr>-->
-          <!--          <tr v-else-if="isLoading && !isFinished">-->
-          <!--            <td colspan="4" style="height: 90px; text-align: center">-->
-          <!--              <progress class="nes-progress" value="90" max="100"></progress>-->
-          <!--            </td>-->
-          <!--          </tr>-->
+          <tr v-if="!boardgames?.length">
+            <td colspan="4" style="height: 90px; text-align: center">Aucun jeu enregistré</td>
+          </tr>
+          <tr v-else-if="!filteredBoardgames?.length">
+            <td colspan="4" style="height: 90px; text-align: center">
+              Aucun jeu trouvé ({{ boardgames?.length }} cachés)
+            </td>
+          </tr>
+
           <tr v-for="boardgame in filteredAndSortedBoardgames" :key="boardgame.id">
             <td>
+              <div
+                class="nes-badge"
+                style="width: 50px; margin-right: 30px; vertical-align: middle"
+                v-show="boardgame.is_new"
+              >
+                <span class="is-warning">new</span>
+              </div>
+
               <span
                 class="nes-text"
                 :class="{ 'is-error': !!boardgame.lent_to }"
                 v-text="boardgame.name"
-              />
+              >
+              </span>
               <ConfirmAction @ok="() => del(boardgame.id)">
                 <template #default="{ open }">
                   <button
@@ -69,7 +79,9 @@
               <ConfirmAction @ok="() => patch({ id: boardgame.id, lent_to: null })">
                 <template #default="{ open }">
                   <button
-                    v-show="!!boardgame.lent_to"
+                    v-show="
+                      !!boardgame.lent_to && (boardgame.lent_to === me || boardgame.owner === me)
+                    "
                     type="button"
                     style="margin-left: 1rem"
                     class="nes-btn is-error"
@@ -107,12 +119,12 @@ import ConfirmAction from '@/components/ConfirmAction.vue'
 import AddLendingDialog from '@/components/AddLendingDialog.vue'
 
 const displayTable = ref(false)
-const { boardgames, reload, patch, del } = useBoardgames()
+const { boardgames, filteredBoardgames, reload, patch, del } = useBoardgames()
 const sort = useLocalStorage('sort', 'name')
 const me = useLocalStorage('me', null)
 
 const filteredAndSortedBoardgames = computed<Boardgame[]>(() => {
-  return sortBy(boardgames.value, sort.value)
+  return sortBy(filteredBoardgames.value, (b) => b[sort.value]?.toLowerCase())
 })
 
 const getGravatarImageUrl = (user: string) => {

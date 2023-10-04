@@ -4,8 +4,10 @@ import BoardgameTable from '@/BoardgameTable.vue'
 import WhoAmIDialog from '@/components/WhoAmIDialog.vue'
 import { computed } from 'vue'
 import CreateDialog from '@/components/CreateDialog.vue'
+import useBoardgames from '@/stores/boardgames'
 
 const workName = computed(() => `@${import.meta.env.VITE_WORK_NAME}`)
+const { q } = useBoardgames()
 </script>
 
 <template>
@@ -16,8 +18,17 @@ const workName = computed(() => `@${import.meta.env.VITE_WORK_NAME}`)
     <h6 style="text-align: center; padding: 0 3rem" v-text="workName"></h6>
   </header>
   <main>
-    <div style="padding: 1rem 0">
+    <div style="padding: 1rem 0; display: flex; justify-content: space-between">
       <CreateDialog />
+      <input
+        placeholder="Rechercher..."
+        v-model.trim="q"
+        type="search"
+        id="search"
+        class="nes-input"
+        style="width: 300px"
+        autofocus
+      />
     </div>
     <BoardgameTable />
     <!-- Dialog -->
