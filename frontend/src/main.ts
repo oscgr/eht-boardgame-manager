@@ -6,5 +6,6 @@ import useConfiguration from '@/stores/configuration'
 
 const { getConfiguration } = useConfiguration()
 
-await getConfiguration()
-createApp(App).mount('#app')
+getConfiguration().then(() => {
+  createApp(App).mount('#app')
+})
