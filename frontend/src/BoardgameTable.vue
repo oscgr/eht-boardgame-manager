@@ -117,20 +117,23 @@ import { computed, onMounted, ref } from 'vue'
 import { sortBy } from 'lodash-es'
 import ConfirmAction from '@/components/ConfirmAction.vue'
 import AddLendingDialog from '@/components/AddLendingDialog.vue'
+import useConfiguration from '@/stores/configuration'
 
 const displayTable = ref(false)
 const { boardgames, filteredBoardgames, reload, patch, del } = useBoardgames()
 const sort = useLocalStorage('sort', 'name')
 const me = useLocalStorage('me', null)
+const { configuration } = useConfiguration()
 
 const filteredAndSortedBoardgames = computed<Boardgame[]>(() => {
   return sortBy(filteredBoardgames.value, (b) => b[sort.value]?.toLowerCase())
 })
 
+// todo refact
 const getGravatarImageUrl = (user: string) => {
   return (
     'https://www.gravatar.com/avatar/' +
-    md5(user + '@' + import.meta.env.VITE_WORK_DOMAIN) +
+    md5(user + '@' + configuration.value.work_domain) +
     '?d=retro'
   )
 }

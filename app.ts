@@ -4,6 +4,12 @@ import bodyParser = require('body-parser');
 import path from "path";
 const port = process.env.PORT || 8080
 
+declare module "bun" {
+  interface Env {
+    WORK_DOMAIN: string;
+    WORK_NAME: string;
+  }
+}
 const knex = require('knex')({
   client: 'sqlite3',
   connection: {
@@ -14,6 +20,14 @@ const knex = require('knex')({
 
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, 'www')));
+
+app.get('/api/configuration', async (req, res) => {
+
+  res.send({
+    work_domain: Bun.env.WORK_DOMAIN,
+    work_name: Bun.env.WORK_NAME,
+  })
+})
 
 app.get('/api/boardgames', async (req, res) => {
   const selectedRows = await knex('boardgames')

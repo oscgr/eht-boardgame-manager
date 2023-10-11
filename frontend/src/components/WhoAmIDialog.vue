@@ -45,10 +45,13 @@
 import { onMounted, ref } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import md5 from 'crypto-js/md5'
+import useConfiguration from '@/stores/configuration'
 
 const dialogWhoAmI = ref<HTMLDialogElement>()
 const tempMe = ref('')
 const me = useLocalStorage('me', null)
+
+const { configuration } = useConfiguration()
 
 const save = async () => {
   if (!tempMe.value || tempMe.value.length !== 3) return
@@ -64,7 +67,7 @@ const open = () => {
 const getGravatarImageUrl = (user: string) => {
   return (
     'https://www.gravatar.com/avatar/' +
-    md5(user + '@' + import.meta.env.VITE_WORK_DOMAIN) +
+    md5(user + '@' + configuration.value.work_domain) +
     '?d=retro'
   )
 }

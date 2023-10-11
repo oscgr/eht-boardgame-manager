@@ -5,8 +5,10 @@ import WhoAmIDialog from '@/components/WhoAmIDialog.vue'
 import { computed } from 'vue'
 import CreateDialog from '@/components/CreateDialog.vue'
 import useBoardgames from '@/stores/boardgames'
+import useConfiguration from '@/stores/configuration'
+const { configuration } = useConfiguration()
 
-const workName = computed(() => `@${import.meta.env.VITE_WORK_NAME}`)
+const workName = computed(() => `@${configuration.value.work_name}`)
 const { q } = useBoardgames()
 </script>
 
