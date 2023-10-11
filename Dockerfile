@@ -12,6 +12,7 @@ COPY docker/node_sqlite3.node node_modules/sqlite3/lib/binding/napi-v6-linux-gli
 COPY databases/data.db.init databases/data.db
 COPY www/ ./www/
 COPY app.ts .
+COPY .env .
 
 # launch
 EXPOSE 8080
