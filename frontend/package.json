@@ -1,5 +1,5 @@
 {
-  "name": "eht-boardgame-manager-front",
+  "name": "boardgame-manager-front",
   "scripts": {
     "front:dev": "vite",
     "front:build": "vite build --emptyOutDir",
