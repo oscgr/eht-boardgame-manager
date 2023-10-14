@@ -9,6 +9,6 @@ services:
     logging:
       options:
         max-size: 1g
-    image: boardgame-manager
+    image: oscgr/boardgame-manager
 volumes:
   db:

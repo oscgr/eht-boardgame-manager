@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "start": "bun app.ts",
-    "docker:build": "docker build -t boardgame-manager .",
+    "docker:build": "docker build -t oscgr/boardgame-manager .",
     "docker:run": "docker-compose up -d"
   },
   "main": "app.ts",
